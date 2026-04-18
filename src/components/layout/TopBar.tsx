@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
-import { Bell, Search } from 'lucide-react';
+import { Bell } from 'lucide-react';
 
 const pageTitles: Record<string, string> = {
   '/': 'Dashboard',

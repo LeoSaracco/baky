@@ -37,8 +37,8 @@ export const Costos: React.FC = () => {
         return matchCat && matchMargen;
       })
       .sort((a, b) => {
-        const aVal = sortCol === 'nombre' ? a.receta.nombre : (a as any)[sortCol];
-        const bVal = sortCol === 'nombre' ? b.receta.nombre : (b as any)[sortCol];
+        const aVal = sortCol === 'nombre' ? a.receta.nombre : (a as Record<string, string | number>)[sortCol];
+        const bVal = sortCol === 'nombre' ? b.receta.nombre : (b as Record<string, string | number>)[sortCol];
         if (typeof aVal === 'string') return sortDir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
         return sortDir === 'asc' ? aVal - bVal : bVal - aVal;
       });

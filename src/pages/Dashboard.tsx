@@ -1,15 +1,14 @@
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
-  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell,
+  BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer,
 } from 'recharts';
 import {
-  BookOpen, ClipboardList, TrendingUp, ShoppingCart,
-  Plus, FileText, Zap, Tag,
+  BookOpen, ClipboardList, TrendingUp,
+  FileText, Tag,
 } from 'lucide-react';
 import { KpiCard } from '../components/ui/KpiCard';
 import { Card } from '../components/ui/Card';
-import { Button } from '../components/ui/Button';
 import { Badge, estadoPedidoBadge, estadoPedidoLabel } from '../components/ui/Badge';
 import { useRecetasStore } from '../store/useRecetasStore';
 import { useProductosStore } from '../store/useProductosStore';

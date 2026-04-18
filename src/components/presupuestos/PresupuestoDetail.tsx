@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React from 'react';
 import { Plus, Copy, Send, Download, Trash2, X, FileText } from 'lucide-react';
 import { usePresupuestosStore } from '../../store/usePresupuestosStore';
 import { useRecetasStore } from '../../store/useRecetasStore';
@@ -10,7 +10,7 @@ import { calcCostoReceta, formatARS } from '../../utils/calcCostos';
 import { exportPresupuestoPDF } from '../../utils/exportPDF';
 import { v4 as uuidv4 } from 'uuid';
 import toast from 'react-hot-toast';
-import type { Presupuesto, EstadoPresupuesto, ItemPresupuesto } from '../../types';
+import type { EstadoPresupuesto, ItemPresupuesto } from '../../types';
 
 interface PresupuestoDetailProps {
   presupuestoId: string | null;
@@ -57,15 +57,17 @@ export const PresupuestoDetail: React.FC<PresupuestoDetailProps> = ({
     updatePresupuesto(selected.id, { items: selected.items.filter((i) => i.id !== itemId) });
   };
 
-  const totals = useMemo(() => {
+  const calculateTotals = () => {
     if (!selected) return { subtotal: 0, descuento: 0, impuestos: 0, total: 0 };
     const subtotal = selected.items.reduce((s, i) => s + i.cantidad * i.precioUnitario, 0);
     const descuento = subtotal * (selected.descuento / 100);
     const impuestos = (subtotal - descuento) * (selected.impuestos / 100);
     return { subtotal, descuento, impuestos, total: subtotal - descuento + impuestos };
-  }, [selected]);
+  };
 
-  const marginAnalysis = useMemo(() => {
+  const totals = calculateTotals();
+
+  const calculateMargin = () => {
     if (!selected) return { costoTotal: 0, ganancia: 0 };
     let costoTotal = 0;
     for (const item of selected.items) {
@@ -75,7 +77,9 @@ export const PresupuestoDetail: React.FC<PresupuestoDetailProps> = ({
       }
     }
     return { costoTotal, ganancia: totals.total - costoTotal };
-  }, [selected, recetas, productos, totals]);
+  };
+
+  const marginAnalysis = calculateMargin();
 
   if (!selected) {
     return (

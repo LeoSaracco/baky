@@ -8,6 +8,7 @@ import { Button } from '../ui/Button';
 import { Tabs } from '../ui/Tabs';
 import { EmptyState } from '../ui/EmptyState';
 import { formatARS, calcCostoReceta } from '../../utils/calcCostos';
+import { margenBadge } from '../../utils/badgeHelpers';
 import { v4 as uuidv4 } from 'uuid';
 import type { CategoriaReceta } from '../../types';
 import { RecetaResumen } from './RecetaResumen';
@@ -43,12 +44,6 @@ export const RecetaDetail: React.FC<RecetaDetailProps> = ({ recetaId, onDelete }
   }
 
   const costs = calcCostoReceta(selectedReceta, productos);
-
-  const margenBadge = (m: number) => {
-    if (m >= 50) return 'mint';
-    if (m >= 30) return 'gray';
-    return 'pink';
-  };
 
   // Helper functions for items
   const updateIngrediente = (id: string, field: string, value: string) => {
