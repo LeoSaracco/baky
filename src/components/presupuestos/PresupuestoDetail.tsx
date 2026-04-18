@@ -262,7 +262,8 @@ export const PresupuestoDetail: React.FC<PresupuestoDetailProps> = ({
               <input
                 type="number"
                 className="input-field py-1 w-16 text-right text-xs"
-                value={selected.descuento}
+                placeholder="0"
+                value={selected.descuento === 0 ? '' : selected.descuento}
                 onChange={(e) => updatePresupuesto(selected.id, { descuento: Number(e.target.value) })}
               />
               <span className="text-[var(--text-muted)] text-xs">%</span>
@@ -275,7 +276,8 @@ export const PresupuestoDetail: React.FC<PresupuestoDetailProps> = ({
               <input
                 type="number"
                 className="input-field py-1 w-16 text-right text-xs"
-                value={selected.impuestos}
+                placeholder="0"
+                value={selected.impuestos === 0 ? '' : selected.impuestos}
                 onChange={(e) => updatePresupuesto(selected.id, { impuestos: Number(e.target.value) })}
               />
               <span className="text-[var(--text-muted)] text-xs">%</span>

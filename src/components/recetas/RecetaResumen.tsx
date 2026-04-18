@@ -99,7 +99,8 @@ export const RecetaResumen: React.FC<RecetaResumenProps> = ({
             <input
               type="number"
               className="input-field text-lg py-3"
-              value={margen}
+              placeholder="0"
+              value={margen === 0 ? '' : margen}
               onChange={(e) => setMargen(Number(e.target.value))}
             />
           </div>
@@ -108,7 +109,8 @@ export const RecetaResumen: React.FC<RecetaResumenProps> = ({
             <input
               type="number"
               className="input-field text-lg py-3"
-              value={descuento}
+              placeholder="0"
+              value={descuento === 0 ? '' : descuento}
               onChange={(e) => setDescuento(Number(e.target.value))}
             />
           </div>
@@ -117,7 +119,8 @@ export const RecetaResumen: React.FC<RecetaResumenProps> = ({
             <input
               type="number"
               className="input-field text-lg py-3"
-              value={impuestos}
+              placeholder="0"
+              value={impuestos === 0 ? '' : impuestos}
               onChange={(e) => setImpuestos(Number(e.target.value))}
             />
           </div>
