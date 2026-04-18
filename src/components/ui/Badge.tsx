@@ -1,8 +1,6 @@
 import React from 'react';
 import { BadgeVariant } from '../../utils/badgeHelpers';
 
-export { Badge };
-
 interface BadgeProps {
   variant?: BadgeVariant;
   children: React.ReactNode;

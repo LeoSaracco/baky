@@ -41,13 +41,11 @@ export const Packaging: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<PackagingItem | null>(null);
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
-    defaultValues: { nombre: '', tipo: 'caja' as const, costoUnitario: 0, notas: '' },
-  });
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
 
   const openNew = () => {
     setEditTarget(null);
-    reset({ nombre: '', tipo: 'caja', costoUnitario: 0, notas: '' });
+    reset({ nombre: '', tipo: 'caja' as const, costoUnitario: 0, notas: '' });
     setModalOpen(true);
   };
 

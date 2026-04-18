@@ -65,9 +65,7 @@ export const Productos: React.FC = () => {
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('');
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm({
-    defaultValues: { nombre: '', categoria: 'harinas', unidad: 'g', precioActual: 0, proveedor: '' },
-  });
+  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
 
   const filtered = productos.filter((p) => {
     const matchSearch = p.nombre.toLowerCase().includes(search.toLowerCase());
@@ -77,7 +75,7 @@ export const Productos: React.FC = () => {
 
   const openNew = () => {
     setEditTarget(null);
-    reset({ nombre: '', categoria: 'harinas', unidad: 'g', precioActual: 0, proveedor: '' });
+    reset({ nombre: '', categoria: 'harinas' as const, unidad: 'g' as const, precioActual: 0, proveedor: '' });
     setModalOpen(true);
   };
 
