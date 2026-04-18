@@ -11,50 +11,48 @@ import { Supermercados } from '../pages/Supermercados';
 import { ComparadorPrecios } from '../pages/ComparadorPrecios';
 import { ListaCompras } from '../pages/ListaCompras';
 
-export const router = createBrowserRouter([
-  {
-    basename: '/baky',
-  },
-  {
-    path: '/',
-  {
-    path: '/',
-    element: <AppShell><Dashboard /></AppShell>,
-  },
-  {
-    path: '/recetas',
-    element: <AppShell><Recetas /></AppShell>,
-  },
-  {
-    path: '/productos',
-    element: <AppShell><Productos /></AppShell>,
-  },
-  {
-    path: '/packaging',
-    element: <AppShell><Packaging /></AppShell>,
-  },
-  {
-    path: '/costos',
-    element: <AppShell><Costos /></AppShell>,
-  },
-  {
-    path: '/presupuestos',
-    element: <AppShell><Presupuestos /></AppShell>,
-  },
-  {
-    path: '/pedidos',
-    element: <AppShell><Pedidos /></AppShell>,
-  },
-  {
-    path: '/supermercados',
-    element: <AppShell><Supermercados /></AppShell>,
-  },
-  {
-    path: '/comparador',
-    element: <AppShell><ComparadorPrecios /></AppShell>,
-  },
-  {
-    path: '/lista-compras',
-    element: <AppShell><ListaCompras /></AppShell>,
-  },
-]);
+export const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <AppShell><Dashboard /></AppShell>,
+    },
+    {
+      path: '/recetas',
+      element: <AppShell><Recetas /></AppShell>,
+    },
+    {
+      path: '/productos',
+      element: <AppShell><Productos /></AppShell>,
+    },
+    {
+      path: '/packaging',
+      element: <AppShell><Packaging /></AppShell>,
+    },
+    {
+      path: '/costos',
+      element: <AppShell><Costos /></AppShell>,
+    },
+    {
+      path: '/presupuestos',
+      element: <AppShell><Presupuestos /></AppShell>,
+    },
+    {
+      path: '/pedidos',
+      element: <AppShell><Pedidos /></AppShell>,
+    },
+    {
+      path: '/supermercados',
+      element: <AppShell><Supermercados /></AppShell>,
+    },
+    {
+      path: '/comparador',
+      element: <AppShell><ComparadorPrecios /></AppShell>,
+    },
+    {
+      path: '/lista-compras',
+      element: <AppShell><ListaCompras /></AppShell>,
+    },
+  ],
+  { basename: '/baky' }
+);
