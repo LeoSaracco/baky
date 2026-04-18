@@ -8,10 +8,15 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  DEPLOY_DOMAIN: ${{ github.repository }}.github.io
 
 jobs:
   lint:
@@ -54,3 +59,21 @@ jobs:
           name: dist
           path: dist
           retention-days: 7
+
+  deploy:
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        with:
+          name: dist
+      - uses: actions/configure-pages@7192c0da79d8cda1c35ad2aa1b20a7e24f91a9ffc3 # v5.0.0
+      - uses: actions/upload-pages-artifact@d33ff50e2b7e4a6b5fe15edc8c13d82c8bad75fa # v3.0.1
+        with:
+          name: dist
+      - id: deployment
+        uses: actions/deploy-pages@1e15a4f3c5e3e3f2d6a4ef4a7d82a5e6cf70d3d0 # v4.3.2
