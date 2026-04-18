@@ -11,7 +11,14 @@ Visualizá tu actividad, resumen del día y rendimiento del negocio mediante est
 ![Dashboard](docs/dashboard.png)
 
 ### 📈 Costeos e Ingeniería de Menú
-No vuelvas a perder dinero estimando los costos "a ojo". Baky incluye cálculos transparentes y desglosados separando insumos de packaging y mano de obra.
+No vuelvas a perder dinero estimando los costos "a ojo". Baky incluye cálculos transparentes y desglosados separando insumos de packaging y mano de obra. 
+
+> **💡 Explicación Funcional: Márgenes e Impuestos**
+> 
+> A diferencia de calculadoras estándar, Baky separa estructuralmente la **Rentabilidad Limpia** de las **Cargas Impositivas**:
+> 
+> *   **El Margen de Ganancia (%)** es la rentabilidad real evaluada _sobre el precio estimado de venta_. Si tus costos totales son de **$10.000** reales y requieres un Margen del **50%**, el Sistema devuelve un **Precio de $20.000** (De los cuales el 50% recompra tus insumos fijos y el otro 50% es tu ganancia 100% libre).
+> *   **El Impuesto / Recargo (%)**: Una vez que se alcanza la ganancia pura que entra a tu bolsillo deseada, los recargos e impuestos actúan **fuera del scope del margen base**. Si sumas el 10% de impuestos a esos $20.000, el cliente pagará $22.000, pero esto te permite transferir los ingresos tributarios íntegramente al fisco/proveedores sin carcomer un solo centavo de tu 50% de ganancia extraída original.
 ![Análisis de Costos](docs/costos.png)
 ![Detalle de un Presupuesto/Costeo](docs/budget_detail.png)
 
