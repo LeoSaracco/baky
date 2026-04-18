@@ -17,7 +17,7 @@ interface TabsProps {
 export const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onChange, className = '' }) => {
   return (
     <div
-      className={`flex gap-1 p-1 rounded-xl ${className}`}
+      className={`flex overflow-x-auto scrollbar-hide whitespace-nowrap gap-1 p-1 rounded-xl ${className}`}
       style={{ background: 'var(--bg-overlay)' }}
     >
       {tabs.map((tab) => {

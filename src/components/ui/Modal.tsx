@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { X } from 'lucide-react';
+import { useIsMobile } from '../../hooks/useMediaQuery';
 
 interface ModalProps {
   open: boolean;
@@ -18,6 +19,8 @@ export const Modal: React.FC<ModalProps> = ({
   size = 'md',
   footer,
 }) => {
+  const isMobile = useIsMobile();
+
   useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -53,17 +56,14 @@ export const Modal: React.FC<ModalProps> = ({
       />
       {/* Modal */}
       <div
-        className={`relative w-full ${sizes[size]} animate-slide-up`}
+        className={`relative w-full animate-slide-up flex flex-col ${
+          isMobile 
+            ? 'h-[100dvh] max-w-full rounded-none m-0 border-0' 
+            : `${sizes[size]} max-h-[90vh] m-auto rounded-[var(--radius-xl)] border border-[var(--border-subtle)]`
+        }`}
         style={{
           background: 'var(--bg-elevated)',
-          border: '1px solid var(--border-subtle)',
-          borderRadius: 'var(--radius-xl)',
           boxShadow: 'var(--shadow-lg)',
-          maxHeight: '90vh',
-          display: 'flex',
-          flexDirection: 'column',
-          margin: 'auto',
-          alignSelf: 'center',
         }}
       >
         {/* Header */}

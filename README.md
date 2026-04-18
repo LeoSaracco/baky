@@ -1,73 +1,64 @@
-# React + TypeScript + Vite
+# Baky – Plataforma de Gestión para Pasteleros y Panaderos 🍞🧁
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Baky es una solución integral diseñada exclusivamente para emprendedores y negocios de gastronomía, especializada en administrar recetas, costear ingredientes y proyectar la rentabilidad precisa libre de márgenes impositivos, logrando tener un control centralizado de todos los pedidos y finanzas.
 
-Currently, two official plugins are available:
+¡Todo en una vista responsiva super intuitiva y visualmente premium!
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Capturas de Pantalla
 
-## React Compiler
+### 📊 Dashboard
+Visualizá tu actividad, resumen del día y rendimiento del negocio mediante estadísticas rápidas y paneles centralizados.
+![Dashboard](docs/dashboard.png)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 📈 Costeos e Ingeniería de Menú
+No vuelvas a perder dinero estimando los costos "a ojo". Baky incluye cálculos transparentes y desglosados separando insumos de packaging y mano de obra.
+![Análisis de Costos](docs/costos.png)
+![Detalle de un Presupuesto/Costeo](docs/budget_detail.png)
 
-## Expanding the ESLint configuration
+### 🧾 Listas de Compras Inteligentes
+Baky consolida inteligentemente todo lo que necesitas comprar para abastecer los pedidos en cola, separándolos para un recorrido práctico en el mercado.
+![Lista de Compras](docs/lista_compras.png)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+### 📁 Gestión de Presupuestos Formales
+Emití presupuestos para eventos corporativos o casamientos de manera profesional (incluyendo descuentos e impuestos personalizados que se aplican matemáticamente de manera sana, sin romper tu margen).
+![Lista de Presupuestos](docs/presupuestos_list.png)
+![Presupuesto Abierto](docs/presupuesto_detail.png)
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### 🛒 Tracker de Pedidos
+Llevá pedidos desde que son "Pendientes", pasando por "En Preparación" hasta "Entregado", y no dejes baches de entregas nunca más.
+![Módulo de Pedidos](docs/pedidos_list.png)
+![Detalles del Pedido](docs/pedido_detail.png)
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Funcionalidades Principales Destacadas
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+* 📱 **Mobile Resiliente:** Soporte integral para tablets y iPhones, convirtiendo densos paneles en interactivas "Drawers" full page y tablas deslizadas.
+* 📝 **Componente Recetas (Modal lateral y Costos):** Puedes agrupar las recetas por ingredientes, sumar horas hombre (Mano de obra) y agregar empaquetado (Packaging). **La ganancia sugerida te garantizará el Mark-Up neto real**.
+* 📉 **Local-first Persistente:** Los datos corren 100% en tu navegador a super velocidad (`localStorage`) usando Zustand.
+* 💳 **Comparativa de Supermercados:** Analizá y loggeá los precios de la misma manteca y harina en sucursales o franquicias cercanas, visualizado espacialmente para elegir mejor proveedor.
+* 🖨 **Exportaciones PDF:** Listo en un click para compartir por WhatsApp Web los detalles para tus clientes.
+
+## Stack Tecnológico 💻
+* Frontend: **React 19 + React Router 7**
+* Herramienta de compilación principal: **Vite**
+* Estilos: **Tailwind CSS + Vainilla para UI Tokens** 
+* Manejo de Layouts: **Lucide React** (iconografía ágil)
+* Manejo de estados: **Zustand**
+* Validación de tipajes: **TypeScript + Zod v4**
+* Calidad y Linter: **ESLint + React-Compiler (Reglas strictly configuradas)**
+
+## Cómo Ejecutarlo
+
+1. Clona el Repositorio.
+2. Ejecuta la instalación usando **npm:**
+```bash
+npm install
+```
+3. Ejecuta el servidor Dev:
+```bash
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+> **Baky** está optimizado y preparado para un despliegue directo sobre GitHub Pages o Vercel (`npm run build`).
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+Hecho con meticulosidad para profesionales de la gastronomía.
