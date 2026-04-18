@@ -1,0 +1,305 @@
+﻿
+> baky@0.0.0 lint
+> eslint .
+
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\App.tsx
+  46:6  warning  React Hook useEffect has missing dependencies: 'setItems', 'setPedNumero', 'setPedidos', 'setPrecios', 'setPresNumero', 'setPresupuestos', 'setProductos', 'setRecetas', and 'setSupermercados'. Either include them or remove the dependency array  react-hooks/exhaustive-deps
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\components\layout\Sidebar.tsx
+  2:19  error  'useLocation' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\components\layout\TopBar.tsx
+  3:16  error  'Search' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\components\pedidos\PedidoDetail.tsx
+  2:46  error  'X' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\components\presupuestos\PresupuestoDetail.tsx
+  13:15  error  'Presupuesto' is defined but never used                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               @typescript-eslint/no-unused-vars
+  66:7   error  Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. This dependency may be mutated later, which could cause the value to change unexpectedly.
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\components\presupuestos\PresupuestoDetail.tsx:66:7
+  64 |     const impuestos = (subtotal - descuento) * (selected.impuestos / 100);
+  65 |     return { subtotal, descuento, impuestos, total: subtotal - descuento + impuestos };
+> 66 |   }, [selected]);
+     |       ^^^^^^^^ This dependency may be modified later
+  67 |
+  68 |   const marginAnalysis = useMemo(() => {
+  69 |     if (!selected) return { costoTotal: 0, ganancia: 0 };  react-hooks/preserve-manual-memoization
+  78:7   error  Compilation Skipped: Existing memoization could not be preserved
+
+React Compiler has skipped optimizing this component because the existing manual memoization could not be preserved. This dependency may be mutated later, which could cause the value to change unexpectedly.
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\components\presupuestos\PresupuestoDetail.tsx:78:7
+  76 |     }
+  77 |     return { costoTotal, ganancia: totals.total - costoTotal };
+> 78 |   }, [selected, recetas, productos, totals]);
+     |       ^^^^^^^^ This dependency may be modified later
+  79 |
+  80 |   if (!selected) {
+  81 |     return (                                                                                                                                      react-hooks/preserve-manual-memoization
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\components\ui\Badge.tsx
+  40:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  50:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  60:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  70:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+  80:17  error  Fast refresh only works when a file only exports components. Use a new file to share constants or functions between components  react-refresh/only-export-components
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\components\ui\Button.tsx
+  24:9  error  'base' is assigned a value but never used   @typescript-eslint/no-unused-vars
+  33:9  error  'sizes' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\components\ui\Tabs.tsx
+  1:17  error  'useState' is defined but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\ComparadorPrecios.tsx
+  17:15  error  'PrecioRegistro' is defined but never used      @typescript-eslint/no-unused-vars
+  84:9   error  'maxPrecio' is assigned a value but never used  @typescript-eslint/no-unused-vars
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx
+  132:25  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:132:25
+  130 |             <tr>
+  131 |               <th onClick={() => toggleSort('nombre')} className="cursor-pointer">
+> 132 |                 Receta <SortIcon col="nombre" />
+      |                         ^^^^^^^^ This component is created during render
+  133 |               </th>
+  134 |               <th onClick={() => toggleSort('costoMateriales')} className="cursor-pointer">
+  135 |                 Materiales <SortIcon col="costoMateriales" />
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:59:20
+  57 |   };
+  58 |
+> 59 |   const SortIcon = ({ col }: { col: string }) => (
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 60 |     <span className="ml-1 text-[var(--text-muted)]">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 61 |       {sortCol === col ? (sortDir === 'asc' ? 'Ôåæ' : 'Ôåô') : 'Ôåò'}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 62 |     </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 63 |   );
+     | ^^^^ The component is created during render here
+  64 |
+  65 |   if (recetas.length === 0) {
+  66 |     return (                               react-hooks/static-components
+  135:29  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:135:29
+  133 |               </th>
+  134 |               <th onClick={() => toggleSort('costoMateriales')} className="cursor-pointer">
+> 135 |                 Materiales <SortIcon col="costoMateriales" />
+      |                             ^^^^^^^^ This component is created during render
+  136 |               </th>
+  137 |               <th onClick={() => toggleSort('costoManoDeObra')} className="cursor-pointer">
+  138 |                 M. de Obra <SortIcon col="costoManoDeObra" />
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:59:20
+  57 |   };
+  58 |
+> 59 |   const SortIcon = ({ col }: { col: string }) => (
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 60 |     <span className="ml-1 text-[var(--text-muted)]">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 61 |       {sortCol === col ? (sortDir === 'asc' ? 'Ôåæ' : 'Ôåô') : 'Ôåò'}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 62 |     </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 63 |   );
+     | ^^^^ The component is created during render here
+  64 |
+  65 |   if (recetas.length === 0) {
+  66 |     return (  react-hooks/static-components
+  138:29  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:138:29
+  136 |               </th>
+  137 |               <th onClick={() => toggleSort('costoManoDeObra')} className="cursor-pointer">
+> 138 |                 M. de Obra <SortIcon col="costoManoDeObra" />
+      |                             ^^^^^^^^ This component is created during render
+  139 |               </th>
+  140 |               <th onClick={() => toggleSort('costoPackaging')} className="cursor-pointer">
+  141 |                 Packaging <SortIcon col="costoPackaging" />
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:59:20
+  57 |   };
+  58 |
+> 59 |   const SortIcon = ({ col }: { col: string }) => (
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 60 |     <span className="ml-1 text-[var(--text-muted)]">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 61 |       {sortCol === col ? (sortDir === 'asc' ? 'Ôåæ' : 'Ôåô') : 'Ôåò'}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 62 |     </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 63 |   );
+     | ^^^^ The component is created during render here
+  64 |
+  65 |   if (recetas.length === 0) {
+  66 |     return (     react-hooks/static-components
+  141:28  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:141:28
+  139 |               </th>
+  140 |               <th onClick={() => toggleSort('costoPackaging')} className="cursor-pointer">
+> 141 |                 Packaging <SortIcon col="costoPackaging" />
+      |                            ^^^^^^^^ This component is created during render
+  142 |               </th>
+  143 |               <th onClick={() => toggleSort('impuestos')} className="cursor-pointer">
+  144 |                 Impuestos <SortIcon col="impuestos" />
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:59:20
+  57 |   };
+  58 |
+> 59 |   const SortIcon = ({ col }: { col: string }) => (
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 60 |     <span className="ml-1 text-[var(--text-muted)]">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 61 |       {sortCol === col ? (sortDir === 'asc' ? 'Ôåæ' : 'Ôåô') : 'Ôåò'}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 62 |     </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 63 |   );
+     | ^^^^ The component is created during render here
+  64 |
+  65 |   if (recetas.length === 0) {
+  66 |     return (                   react-hooks/static-components
+  144:28  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:144:28
+  142 |               </th>
+  143 |               <th onClick={() => toggleSort('impuestos')} className="cursor-pointer">
+> 144 |                 Impuestos <SortIcon col="impuestos" />
+      |                            ^^^^^^^^ This component is created during render
+  145 |               </th>
+  146 |               <th onClick={() => toggleSort('costoTotal')} className="cursor-pointer">
+  147 |                 Costo Total <SortIcon col="costoTotal" />
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:59:20
+  57 |   };
+  58 |
+> 59 |   const SortIcon = ({ col }: { col: string }) => (
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 60 |     <span className="ml-1 text-[var(--text-muted)]">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 61 |       {sortCol === col ? (sortDir === 'asc' ? 'Ôåæ' : 'Ôåô') : 'Ôåò'}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 62 |     </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 63 |   );
+     | ^^^^ The component is created during render here
+  64 |
+  65 |   if (recetas.length === 0) {
+  66 |     return (                         react-hooks/static-components
+  147:30  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:147:30
+  145 |               </th>
+  146 |               <th onClick={() => toggleSort('costoTotal')} className="cursor-pointer">
+> 147 |                 Costo Total <SortIcon col="costoTotal" />
+      |                              ^^^^^^^^ This component is created during render
+  148 |               </th>
+  149 |               <th onClick={() => toggleSort('precioVenta')} className="cursor-pointer">
+  150 |                 Precio Venta <SortIcon col="precioVenta" />
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:59:20
+  57 |   };
+  58 |
+> 59 |   const SortIcon = ({ col }: { col: string }) => (
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 60 |     <span className="ml-1 text-[var(--text-muted)]">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 61 |       {sortCol === col ? (sortDir === 'asc' ? 'Ôåæ' : 'Ôåô') : 'Ôåò'}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 62 |     </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 63 |   );
+     | ^^^^ The component is created during render here
+  64 |
+  65 |   if (recetas.length === 0) {
+  66 |     return (                react-hooks/static-components
+  150:31  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:150:31
+  148 |               </th>
+  149 |               <th onClick={() => toggleSort('precioVenta')} className="cursor-pointer">
+> 150 |                 Precio Venta <SortIcon col="precioVenta" />
+      |                               ^^^^^^^^ This component is created during render
+  151 |               </th>
+  152 |               <th onClick={() => toggleSort('margenReal')} className="cursor-pointer">
+  153 |                 Margen <SortIcon col="margenReal" />
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:59:20
+  57 |   };
+  58 |
+> 59 |   const SortIcon = ({ col }: { col: string }) => (
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 60 |     <span className="ml-1 text-[var(--text-muted)]">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 61 |       {sortCol === col ? (sortDir === 'asc' ? 'Ôåæ' : 'Ôåô') : 'Ôåò'}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 62 |     </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 63 |   );
+     | ^^^^ The component is created during render here
+  64 |
+  65 |   if (recetas.length === 0) {
+  66 |     return (                    react-hooks/static-components
+  153:25  error  Error: Cannot create components during render
+
+Components created during render will reset their state each time they are created. Declare components outside of render.
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:153:25
+  151 |               </th>
+  152 |               <th onClick={() => toggleSort('margenReal')} className="cursor-pointer">
+> 153 |                 Margen <SortIcon col="margenReal" />
+      |                         ^^^^^^^^ This component is created during render
+  154 |               </th>
+  155 |             </tr>
+  156 |           </thead>
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Costos.tsx:59:20
+  57 |   };
+  58 |
+> 59 |   const SortIcon = ({ col }: { col: string }) => (
+     |                    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 60 |     <span className="ml-1 text-[var(--text-muted)]">
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 61 |       {sortCol === col ? (sortDir === 'asc' ? 'Ôåæ' : 'Ôåô') : 'Ôåò'}
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 62 |     </span>
+     | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+> 63 |   );
+     | ^^^^ The component is created during render here
+  64 |
+  65 |   if (recetas.length === 0) {
+  66 |     return (                                                                                                                                         react-hooks/static-components
+
+C:\Users\LeandroSaracco\OneDrive - Yappa\Documentos\Saas\Baky\src\pages\Dashboard.tsx
+   4:62  error  'Cell' is defined but never used          @typescript-eslint/no-unused-vars
+   7:40  error  'ShoppingCart' is defined but never used  @typescript-eslint/no-unused-vars
+   8:3   error  'Plus' is defined but never used          @typescript-eslint/no-unused-vars
+   8:19  error  'Zap' is defined but never used           @typescript-eslint/no-unused-vars
+  12:10  error  'Button' is defined but never used        @typescript-eslint/no-unused-vars
+
+Ô£û 30 problems (29 errors, 1 warning)
+

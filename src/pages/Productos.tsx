@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Pencil, Trash2, Package } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { useProductosStore } from '../store/useProductosStore';
 import { Button } from '../components/ui/Button';
@@ -13,17 +11,15 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { formatARS } from '../utils/calcCostos';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
-import type { Producto, CategoriaIngrediente } from '../types';
+import type { Producto, CategoriaIngrediente, Unidad } from '../types';
 
-const schema = z.object({
-  nombre: z.string().min(2, 'Nombre requerido'),
-  categoria: z.enum(['harinas', 'lacteos', 'huevos', 'azucares', 'grasas', 'levaduras', 'condimentos', 'chocolates', 'frutas', 'carnes', 'otros']),
-  unidad: z.enum(['g', 'kg', 'ml', 'l', 'unidad', 'cm', 'paquete']),
-  precioActual: z.coerce.number().min(0, 'Precio requerido'),
-  proveedor: z.string().optional(),
-});
-
-type FormData = z.infer<typeof schema>;
+interface FormData {
+  nombre: string;
+  categoria: CategoriaIngrediente;
+  unidad: Unidad;
+  precioActual: number;
+  proveedor?: string;
+}
 
 const categoriaOptions = [
   { value: 'harinas', label: 'Harinas' },
@@ -69,8 +65,8 @@ export const Productos: React.FC = () => {
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('');
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
-    resolver: zodResolver(schema),
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    defaultValues: { nombre: '', categoria: 'harinas', unidad: 'g', precioActual: 0, proveedor: '' },
   });
 
   const filtered = productos.filter((p) => {

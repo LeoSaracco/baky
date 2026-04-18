@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Pencil, Trash2, Box } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
 import toast from 'react-hot-toast';
 import { usePackagingStore } from '../store/usePackagingStore';
 import { Button } from '../components/ui/Button';
@@ -13,14 +11,12 @@ import { EmptyState } from '../components/ui/EmptyState';
 import { formatARS } from '../utils/calcCostos';
 import type { PackagingItem, TipoPackaging } from '../types';
 
-const schema = z.object({
-  nombre: z.string().min(2, 'Nombre requerido'),
-  tipo: z.enum(['caja', 'bolsa', 'sticker', 'cinta', 'bandeja', 'otro']),
-  costoUnitario: z.coerce.number().min(0, 'Costo requerido'),
-  notas: z.string().optional(),
-});
-
-type FormData = z.infer<typeof schema>;
+interface FormData {
+  nombre: string;
+  tipo: 'caja' | 'bolsa' | 'sticker' | 'cinta' | 'bandeja' | 'otro';
+  costoUnitario: number;
+  notas?: string;
+}
 
 const tipoOptions = [
   { value: 'caja', label: 'Caja' },
@@ -45,8 +41,8 @@ export const Packaging: React.FC = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<PackagingItem | null>(null);
 
-  const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>({
-    resolver: zodResolver(schema),
+  const { register, handleSubmit, reset, formState: { errors } } = useForm({
+    defaultValues: { nombre: '', tipo: 'caja' as const, costoUnitario: 0, notas: '' },
   });
 
   const openNew = () => {

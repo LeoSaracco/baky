@@ -37,10 +37,14 @@ export const Costos: React.FC = () => {
         return matchCat && matchMargen;
       })
       .sort((a, b) => {
-        const aVal = sortCol === 'nombre' ? a.receta.nombre : (a as Record<string, string | number>)[sortCol];
-        const bVal = sortCol === 'nombre' ? b.receta.nombre : (b as Record<string, string | number>)[sortCol];
-        if (typeof aVal === 'string') return sortDir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
-        return sortDir === 'asc' ? aVal - bVal : bVal - aVal;
+        const aVal = sortCol === 'nombre' ? a.receta.nombre : (a as unknown as Record<string, string | number>)[sortCol];
+        const bVal = sortCol === 'nombre' ? b.receta.nombre : (b as unknown as Record<string, string | number>)[sortCol];
+        if (typeof aVal === 'string' && typeof bVal === 'string') {
+          return sortDir === 'asc' ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+        }
+        const numA = typeof aVal === 'number' ? aVal : 0;
+        const numB = typeof bVal === 'number' ? bVal : 0;
+        return sortDir === 'asc' ? numA - numB : numB - numA;
       });
   }, [recetas, productos, catFilter, margenMin, sortCol, sortDir]);
 

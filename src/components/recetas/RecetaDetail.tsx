@@ -10,7 +10,7 @@ import { EmptyState } from '../ui/EmptyState';
 import { formatARS, calcCostoReceta } from '../../utils/calcCostos';
 import { margenBadge } from '../../utils/badgeHelpers';
 import { v4 as uuidv4 } from 'uuid';
-import type { CategoriaReceta } from '../../types';
+import type { CategoriaReceta, PackagingItem } from '../../types';
 import { RecetaResumen } from './RecetaResumen';
 
 const categorias: { value: CategoriaReceta | ''; label: string }[] = [
@@ -28,7 +28,7 @@ interface RecetaDetailProps {
 export const RecetaDetail: React.FC<RecetaDetailProps> = ({ recetaId, onDelete }) => {
   const { recetas, updateReceta } = useRecetasStore();
   const { productos } = useProductosStore();
-  const { packaging: packagingItems } = usePackagingStore();
+  const { items: packagingItems } = usePackagingStore();
   const [detailTab, setDetailTab] = useState('materiales');
 
   const selectedReceta = recetas.find((r) => r.id === recetaId);
@@ -306,7 +306,7 @@ export const RecetaDetail: React.FC<RecetaDetailProps> = ({ recetaId, onDelete }
                           className="input-field py-1.5 text-sm"
                           value={pk.packagingId ?? ''}
                           onChange={(e) => {
-                            const found = packagingItems.find((i) => i.id === e.target.value);
+                            const found = packagingItems.find((i: PackagingItem) => i.id === e.target.value);
                             if (found) {
                               updatePackaging(pk.id, 'packagingId', found.id);
                               updatePackaging(pk.id, 'nombre', found.nombre);
@@ -315,7 +315,7 @@ export const RecetaDetail: React.FC<RecetaDetailProps> = ({ recetaId, onDelete }
                           }}
                         >
                           <option value="">Personalizado...</option>
-                          {packagingItems.map((i) => (
+                          {packagingItems.map((i: PackagingItem) => (
                             <option key={i.id} value={i.id}>{i.nombre}</option>
                           ))}
                         </select>
