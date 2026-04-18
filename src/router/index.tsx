@@ -13,6 +13,11 @@ import { ListaCompras } from '../pages/ListaCompras';
 
 export const router = createBrowserRouter([
   {
+    basename: '/baky',
+  },
+  {
+    path: '/',
+  {
     path: '/',
     element: <AppShell><Dashboard /></AppShell>,
   },
