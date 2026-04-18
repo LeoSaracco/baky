@@ -1,7 +1,7 @@
 import React from 'react';
-import { BadgeVariant, estadoPedidoBadge, estadoPedidoLabel, estadoPresupuestoBadge, estadoPresupuestoLabel } from '../../utils/badgeHelpers';
+import { BadgeVariant } from '../../utils/badgeHelpers';
 
-export { Badge, estadoPedidoBadge, estadoPedidoLabel, estadoPresupuestoBadge, estadoPresupuestoLabel };
+export { Badge };
 
 interface BadgeProps {
   variant?: BadgeVariant;

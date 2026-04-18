@@ -9,7 +9,8 @@ import {
 } from 'lucide-react';
 import { KpiCard } from '../components/ui/KpiCard';
 import { Card } from '../components/ui/Card';
-import { Badge, estadoPedidoBadge, estadoPedidoLabel } from '../components/ui/Badge';
+import { Badge } from '../components/ui/Badge';
+import { estadoPedidoBadge, estadoPedidoLabel } from '../components/ui/BadgeHelpers';
 import { useRecetasStore } from '../store/useRecetasStore';
 import { useProductosStore } from '../store/useProductosStore';
 import { usePedidosStore } from '../store/usePedidosStore';
