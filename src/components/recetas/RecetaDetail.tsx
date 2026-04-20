@@ -14,6 +14,7 @@ import type { CategoriaReceta, PackagingItem } from '../../types';
 import { RecetaResumen } from './RecetaResumen';
 
 const categorias: { value: CategoriaReceta | ''; label: string }[] = [
+  { value: 'tartas', label: 'Tartas' },
   { value: 'tortas', label: 'Tortas' },
   { value: 'galletas', label: 'Galletas' },
   { value: 'panes', label: 'Panes' },

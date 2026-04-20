@@ -4,35 +4,34 @@ import { v4 as uuidv4 } from 'uuid';
 import type { Supermercado } from '../types';
 
 interface SupermercadosState {
+  supermercado: Supermercado[];
+  // Alias for backwards compatibility
   supermercados: Supermercado[];
-  addSupermercado: (data: Omit<Supermercado, 'id' | 'createdAt'>) => void;
+  addSupermercado: (data: Omit<Supermercado, 'id' | 'createdAt'>) => Supermercado;
   updateSupermercado: (id: string, data: Partial<Supermercado>) => void;
   deleteSupermercado: (id: string) => void;
-  setSupermercados: (supermercados: Supermercado[]) => void;
+  setSupermercados: (data: Supermercado[]) => void;
 }
 
 export const useSupermercadosStore = create<SupermercadosState>()(
   persist(
     (set) => ({
+      supermercado: [],
       supermercados: [],
-      addSupermercado: (data) =>
-        set((state) => ({
-          supermercados: [
-            ...state.supermercados,
-            { ...data, id: uuidv4(), createdAt: new Date().toISOString() },
-          ],
-        })),
+      addSupermercado: (data) => {
+        const item: Supermercado = {
+          ...data,
+          id: uuidv4(),
+          createdAt: new Date().toISOString(),
+        };
+        set((state) => ({ supermercado: [...state.supermercado, item], supermercados: [...state.supermercado, item] }));
+        return item;
+      },
       updateSupermercado: (id, data) =>
-        set((state) => ({
-          supermercados: state.supermercados.map((s) =>
-            s.id === id ? { ...s, ...data } : s
-          ),
-        })),
+        set((state) => ({ supermercado: state.supermercado.map((s) => s.id === id ? { ...s, ...data } : s), supermercados: state.supermercado.map((s) => s.id === id ? { ...s, ...data } : s) })),
       deleteSupermercado: (id) =>
-        set((state) => ({
-          supermercados: state.supermercados.filter((s) => s.id !== id),
-        })),
-      setSupermercados: (supermercados) => set({ supermercados }),
+        set((state) => ({ supermercado: state.supermercado.filter((s) => s.id !== id), supermercados: state.supermercado.filter((s) => s.id !== id) })),
+      setSupermercados: (data) => set({ supermercado: data, supermercados: data }),
     }),
     { name: 'baky-supermercados' }
   )

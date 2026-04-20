@@ -17,7 +17,7 @@ export type CategoriaIngrediente =
   | 'carnes'
   | 'otros';
 
-export type CategoriaReceta = 'tortas' | 'panes' | 'galletas' | 'otros';
+export type CategoriaReceta = 'tortas' | 'tartas' | 'panes' | 'galletas' | 'otros';
 
 export type TipoPackaging = 'caja' | 'bolsa' | 'sticker' | 'cinta' | 'bandeja' | 'otro';
 

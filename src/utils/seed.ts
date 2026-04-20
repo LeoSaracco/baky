@@ -55,6 +55,34 @@ export const seedPackaging: PackagingItem[] = [
 
 export const seedRecetas: Receta[] = [
   {
+    id: 'r0',
+    nombre: 'Tarta de Limón',
+    categoria: 'tartas',
+    sku: 'TRT-LIM-001',
+    descripcion: 'Tarta de limón con merengue italiano, base de galletitas.',
+    ingredientes: [
+      { id: uuidv4(), productoId: 'p1', cantidad: 200 },
+      { id: uuidv4(), productoId: 'p3', cantidad: 100 },
+      { id: uuidv4(), productoId: 'p4', cantidad: 100 },
+      { id: uuidv4(), productoId: 'p6', cantidad: 2 },
+      { id: uuidv4(), productoId: 'p16', cantidad: 250 },
+    ],
+    manoDeObra: [
+      { id: uuidv4(), actividad: 'Preparación de masa y horneado', tarifaHora: 3000, minutos: 45 },
+      { id: uuidv4(), actividad: 'Preparado de crema de limón', tarifaHora: 2500, minutos: 20 },
+      { id: uuidv4(), actividad: 'Merengue y decoración', tarifaHora: 3500, minutos: 30 },
+    ],
+    packaging: [
+      { id: uuidv4(), packagingId: 'pk1', nombre: 'Caja kraft 20×20', costoUnitario: 450, cantidad: 1 },
+      { id: uuidv4(), packagingId: 'pk4', nombre: 'Sticker logo', costoUnitario: 34, cantidad: 1 },
+    ],
+    margenGanancia: 75,
+    descuento: 0,
+    impuestos: 10,
+    createdAt: fmt(subDays(now, 5)),
+    updatedAt: fmt(subDays(now, 1)),
+  },
+  {
     id: 'r1',
     nombre: 'Torta de Cumpleaños',
     categoria: 'tortas',

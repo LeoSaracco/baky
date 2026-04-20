@@ -15,6 +15,7 @@ const variantClasses: Record<BadgeVariant, string> = {
   peach: 'bg-red-500/10 text-red-300 border border-red-500/20',
   yellow: 'bg-yellow-500/10 text-yellow-300 border border-yellow-500/20',
   gray: 'bg-zinc-500/10 text-zinc-400 border border-zinc-500/20',
+  teal: 'bg-teal-500/10 text-teal-300 border border-teal-500/20',
 };
 
 export const Badge: React.FC<BadgeProps> = ({

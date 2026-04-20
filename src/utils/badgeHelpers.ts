@@ -1,6 +1,28 @@
-import type { EstadoPedido, EstadoPresupuesto } from '../types';
+import type { CategoriaReceta, EstadoPedido, EstadoPresupuesto } from '../types';
 
-export type BadgeVariant = 'pink' | 'mint' | 'lavender' | 'peach' | 'yellow' | 'gray';
+export type BadgeVariant = 'pink' | 'mint' | 'lavender' | 'peach' | 'yellow' | 'gray' | 'teal';
+
+export function categoriaRecetaBadge(categoria: CategoriaReceta): BadgeVariant {
+  const map: Record<CategoriaReceta, BadgeVariant> = {
+    tartas: 'teal',
+    tortas: 'pink',
+    panes: 'lavender',
+    galletas: 'yellow',
+    otros: 'gray',
+  };
+  return map[categoria];
+}
+
+export function categoriaRecetaLabel(categoria: CategoriaReceta): string {
+  const map: Record<CategoriaReceta, string> = {
+    tartas: 'Tartas',
+    tortas: 'Tortas',
+    panes: 'Panes',
+    galletas: 'Galletas',
+    otros: 'Otros',
+  };
+  return map[categoria];
+}
 
 export function estadoPedidoBadge(estado: EstadoPedido): BadgeVariant {
   const map: Record<EstadoPedido, BadgeVariant> = {

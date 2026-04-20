@@ -5,7 +5,7 @@ import type { Producto } from '../types';
 
 interface ProductosState {
   productos: Producto[];
-  addProducto: (data: Omit<Producto, 'id' | 'createdAt' | 'updatedAt'>) => void;
+  addProducto: (data: Omit<Producto, 'id' | 'createdAt' | 'updatedAt'>) => Producto;
   updateProducto: (id: string, data: Partial<Producto>) => void;
   deleteProducto: (id: string) => void;
   setProductos: (productos: Producto[]) => void;
@@ -15,18 +15,18 @@ export const useProductosStore = create<ProductosState>()(
   persist(
     (set) => ({
       productos: [],
-      addProducto: (data) =>
+      addProducto: (data) => {
+        const newProducto: Producto = {
+          ...data,
+          id: uuidv4(),
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        };
         set((state) => ({
-          productos: [
-            ...state.productos,
-            {
-              ...data,
-              id: uuidv4(),
-              createdAt: new Date().toISOString(),
-              updatedAt: new Date().toISOString(),
-            },
-          ],
-        })),
+          productos: [...state.productos, newProducto],
+        }));
+        return newProducto;
+      },
       updateProducto: (id, data) =>
         set((state) => ({
           productos: state.productos.map((p) =>

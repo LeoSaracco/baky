@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
-import { Plus, Pencil, Trash2, Package } from 'lucide-react';
+import React, { useState, useMemo, useEffect } from 'react';
+import { Plus, Pencil, Trash2, Package, Search, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useProductosStore } from '../store/useProductosStore';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Input, Select } from '../components/ui/Input';
-import { Modal } from '../components/ui/Modal';
 import { EmptyState } from '../components/ui/EmptyState';
+import { TwoPanelLayout } from '../components/ui/TwoPanelLayout';
 import { formatARS } from '../utils/calcCostos';
 import { formatDistanceToNow } from 'date-fns';
 import { es } from 'date-fns/locale';
@@ -60,153 +60,174 @@ const categoriaColor: Record<CategoriaIngrediente, 'pink' | 'lavender' | 'mint' 
 
 export const Productos: React.FC = () => {
   const { productos, addProducto, updateProducto, deleteProducto } = useProductosStore();
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editTarget, setEditTarget] = useState<Producto | null>(null);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('');
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
 
-  const filtered = productos.filter((p) => {
-    const matchSearch = p.nombre.toLowerCase().includes(search.toLowerCase());
-    const matchCat = filterCat ? p.categoria === filterCat : true;
-    return matchSearch && matchCat;
-  });
+  const filtered = useMemo(() => {
+    return productos.filter((p) => {
+      const matchSearch = p.nombre.toLowerCase().includes(search.toLowerCase());
+      const matchCat = filterCat ? p.categoria === filterCat : true;
+      return matchSearch && matchCat;
+    });
+  }, [productos, search, filterCat]);
 
-  const openNew = () => {
-    setEditTarget(null);
-    reset({ nombre: '', categoria: 'harinas' as const, unidad: 'g' as const, precioActual: 0, proveedor: '' });
-    setModalOpen(true);
+  const selectedProducto = productos.find((p) => p.id === selectedId);
+
+  useEffect(() => {
+    if (selectedProducto) {
+      reset({
+        nombre: selectedProducto.nombre,
+        categoria: selectedProducto.categoria,
+        unidad: selectedProducto.unidad,
+        precioActual: selectedProducto.precioActual,
+        proveedor: selectedProducto.proveedor ?? '',
+      });
+    }
+  }, [selectedId, selectedProducto, reset]);
+
+  const handleNew = () => {
+    const nuevo = addProducto({
+      nombre: 'Nuevo Ingrediente',
+      categoria: 'harinas',
+      unidad: 'g',
+      precioActual: 0,
+      proveedor: '',
+    });
+    setSelectedId(nuevo.id);
   };
 
   const openEdit = (p: Producto) => {
-    setEditTarget(p);
-    reset({ nombre: p.nombre, categoria: p.categoria, unidad: p.unidad, precioActual: p.precioActual, proveedor: p.proveedor ?? '' });
-    setModalOpen(true);
+    setSelectedId(p.id);
   };
 
   const onSubmit = (data: FormData) => {
-    if (editTarget) {
-      updateProducto(editTarget.id, data);
+    if (selectedId) {
+      updateProducto(selectedId, data);
       toast.success('Ingrediente actualizado');
-    } else {
-      addProducto(data);
-      toast.success('Ingrediente agregado');
     }
-    setModalOpen(false);
   };
 
   const handleDelete = (id: string, nombre: string) => {
     if (confirm(`¿Eliminar "${nombre}"?`)) {
       deleteProducto(id);
+      if (selectedId === id) setSelectedId(null);
       toast.success('Ingrediente eliminado');
     }
   };
 
-  return (
-    <div className="space-y-5">
-      {/* Header */}
-      <div className="flex flex-wrap items-center gap-3">
-        <input
-          className="input-field flex-1 min-w-[180px]"
-          placeholder="Buscar ingredientes..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <select
-          className="input-field w-[160px]"
-          value={filterCat}
-          onChange={(e) => setFilterCat(e.target.value)}
-        >
-          <option value="">Todas las categorías</option>
-          {categoriaOptions.map((o) => (
-            <option key={o.value} value={o.value}>{o.label}</option>
+  const closeForm = () => {
+    setSelectedId(null);
+  };
+
+  const leftPanel = (
+    <div className="flex flex-col gap-4 p-4 h-full overflow-hidden">
+      <div className="flex flex-col gap-4">
+        <div className="relative">
+          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+          <input
+            className="w-full bg-[var(--bg-elevated)] border border-[var(--border-subtle)] rounded-xl pl-12 pr-4 py-3 text-sm focus:ring-1 focus:ring-[var(--pink-400)] text-[var(--text-primary)]"
+            placeholder="Buscar ingredientes..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+        </div>
+        
+        <div className="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+          <button
+            onClick={() => setFilterCat('')}
+            className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border ${
+              filterCat === ''
+                ? 'border-[var(--pink-400)] text-[var(--pink-400)] bg-[var(--pink-glow)]'
+                : 'border-transparent text-[var(--text-muted)] hover:bg-[var(--bg-elevated)]'
+            }`}
+          >
+            Todas
+          </button>
+          {categoriaOptions.map((c) => (
+            <button
+              key={c.value}
+              onClick={() => setFilterCat(c.value)}
+              className={`px-4 py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all border ${
+                filterCat === c.value
+                  ? 'border-[var(--pink-400)] text-[var(--pink-400)] bg-[var(--pink-glow)]'
+                  : 'border-transparent text-[var(--text-muted)] hover:bg-[var(--bg-elevated)]'
+              }`}
+            >
+              {c.label}
+            </button>
           ))}
-        </select>
-        <Button icon={<Plus size={16} />} onClick={openNew}>
+        </div>
+
+        <Button icon={<Plus size={18} />} onClick={handleNew} className="rounded-xl">
           Nuevo Ingrediente
         </Button>
       </div>
 
-      {/* Grid */}
-      {filtered.length === 0 ? (
-        <EmptyState
-          icon={<Package size={28} />}
-          title="Sin ingredientes"
-          description="Agregá tus ingredientes para comenzar a calcular costos de recetas."
-          action={<Button icon={<Plus size={16} />} onClick={openNew}>Agregar ingrediente</Button>}
-        />
-      ) : (
-        <div className="table-container">
-          <table>
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Categoría</th>
-                <th>Unidad</th>
-                <th>Precio actual</th>
-                <th>Proveedor</th>
-                <th>Actualizado</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody>
-              {filtered.map((p) => (
-                <tr key={p.id}>
-                  <td className="font-medium">{p.nombre}</td>
-                  <td>
-                    <Badge variant={categoriaColor[p.categoria]} size="sm">
-                      {categoriaOptions.find(o => o.value === p.categoria)?.label ?? p.categoria}
-                    </Badge>
-                  </td>
-                  <td className="text-[var(--text-secondary)]">{p.unidad}</td>
-                  <td className="mono text-[var(--pink-500)] font-semibold">
-                    {formatARS(p.precioActual)}/{p.unidad}
-                  </td>
-                  <td className="text-[var(--text-secondary)]">{p.proveedor ?? '-'}</td>
-                  <td className="text-xs text-[var(--text-muted)]">
-                    {formatDistanceToNow(new Date(p.updatedAt), { addSuffix: true, locale: es })}
-                  </td>
-                  <td>
-                    <div className="flex gap-2">
-                      <button
-                        onClick={() => openEdit(p)}
-                        className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-[var(--pink-400)] hover:bg-[var(--pink-glow)] transition-all"
-                      >
-                        <Pencil size={14} />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(p.id, p.nombre)}
-                        className="p-1.5 rounded-lg text-[var(--text-muted)] hover:text-red-400 hover:bg-red-500/10 transition-all"
-                      >
-                        <Trash2 size={14} />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
+      <div className="flex-1 overflow-y-auto no-scrollbar -mx-4 px-4">
+        {filtered.length === 0 ? (
+          <EmptyState
+            icon={<Package size={28} />}
+            title="Sin ingredientes"
+            description="Agregá tus ingredientes."
+            action={<Button size="sm" icon={<Plus size={16} />} onClick={handleNew}>Nuevo</Button>}
+          />
+        ) : (
+          <div className="flex flex-col gap-2">
+            {filtered.map((p) => (
+              <div
+                key={p.id}
+                onClick={() => openEdit(p)}
+                className={`p-3 rounded-xl border cursor-pointer transition-all ${
+                  selectedId === p.id
+                    ? 'border-[var(--pink-400)] bg-[var(--pink-glow)]/10'
+                    : 'border-[var(--border-subtle)] hover:border-[var(--pink-400)]/50 bg-[var(--bg-elevated)]'
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex flex-col gap-1">
+                    <span className="font-medium text-[var(--text-primary)]">{p.nombre}</span>
+                    <span className="text-xs text-[var(--text-muted)]">
+                      {formatARS(p.precioActual)}/{p.unidad}
+                    </span>
+                  </div>
+                  <Badge variant={categoriaColor[p.categoria]} size="sm">
+                    {categoriaOptions.find(o => o.value === p.categoria)?.label ?? p.categoria}
+                  </Badge>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
-      {/* Modal */}
-      <Modal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
-        title={editTarget ? 'Editar ingrediente' : 'Nuevo ingrediente'}
-        size="lg"
-        footer={
-          <>
-            <Button variant="ghost" onClick={() => setModalOpen(false)}>Cancelar</Button>
-            <Button onClick={handleSubmit(onSubmit)}>
-              {editTarget ? 'Guardar cambios' : 'Agregar'}
-            </Button>
-          </>
-        }
-      >
+  const rightPanel = selectedId ? (
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)]">
+        <h2 className="font-semibold text-[var(--text-primary)]">
+          {selectedProducto ? 'Editar' : 'Nuevo'} Ingrediente
+        </h2>
+        <div className="flex gap-2">
+          <Button variant="ghost" size="sm" onClick={() => handleDelete(selectedId, selectedProducto?.nombre || '')}>
+            Eliminar
+          </Button>
+          <Button variant="ghost" size="sm" icon={<X size={18} />} onClick={closeForm}>
+            Cerrar
+          </Button>
+        </div>
+      </div>
+      <div className="flex-1 overflow-y-auto p-4">
         <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
-          <Input label="Nombre" {...register('nombre')} error={errors.nombre?.message} placeholder="Ej: Harina 0000" />
+          <Input
+            label="Nombre"
+            {...register('nombre', { required: 'Nombre requerido' })}
+            error={errors.nombre?.message}
+            placeholder="Ej: Harina 0000"
+          />
           <div className="grid grid-cols-2 gap-4">
             <Select
               label="Categoría"
@@ -231,8 +252,21 @@ export const Productos: React.FC = () => {
             placeholder="0.00"
           />
           <Input label="Proveedor (opcional)" {...register('proveedor')} placeholder="Ej: Molinos Río de la Plata" />
+          <Button type="submit" className="w-full">
+            Guardar cambios
+          </Button>
         </form>
-      </Modal>
+      </div>
+    </div>
+  ) : (
+    <div className="flex items-center justify-center h-full text-[var(--text-muted)]">
+      <EmptyState
+        icon={<Package size={48} />}
+        title="Seleccioná un ingrediente"
+        description="Elegí uno de la lista o creá uno nuevo."
+      />
     </div>
   );
+
+  return <TwoPanelLayout leftPanel={leftPanel} rightPanel={rightPanel} />;
 };
