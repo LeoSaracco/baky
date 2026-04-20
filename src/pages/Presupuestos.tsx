@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import { Plus, FileText, Send, X } from 'lucide-react';
+import { Plus, FileText, X } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { usePresupuestosStore } from '../store/usePresupuestosStore';
-import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { estadoPresupuestoBadge, estadoPresupuestoLabel } from '../components/ui/BadgeHelpers';

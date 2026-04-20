@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { Plus, Pencil, Trash2, Package, Search, X } from 'lucide-react';
+import { Plus, Package, Search, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { useProductosStore } from '../store/useProductosStore';
@@ -9,8 +9,6 @@ import { Input, Select } from '../components/ui/Input';
 import { EmptyState } from '../components/ui/EmptyState';
 import { TwoPanelLayout } from '../components/ui/TwoPanelLayout';
 import { formatARS } from '../utils/calcCostos';
-import { formatDistanceToNow } from 'date-fns';
-import { es } from 'date-fns/locale';
 import type { Producto, CategoriaIngrediente, Unidad } from '../types';
 
 interface FormData {

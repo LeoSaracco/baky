@@ -5,7 +5,6 @@ import toast from 'react-hot-toast';
 import { usePedidosStore } from '../store/usePedidosStore';
 import { useRecetasStore } from '../store/useRecetasStore';
 import { useProductosStore } from '../store/useProductosStore';
-import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { estadoPedidoBadge, estadoPedidoLabel } from '../components/ui/BadgeHelpers';

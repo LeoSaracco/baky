@@ -1,17 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { Plus, Pencil, Trash2, MapPin, X } from 'lucide-react';
+import React, { useState } from 'react';
+import { Plus, Trash2, MapPin, X } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import toast from 'react-hot-toast';
 import { useSupermercadosStore } from '../store/useSupermercadosStore';
 import { usePreciosStore } from '../store/usePreciosStore';
-import { useProductosStore } from '../store/useProductosStore';
-import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { EmptyState } from '../components/ui/EmptyState';
 import { TwoPanelLayout } from '../components/ui/TwoPanelLayout';
-import { formatARS } from '../utils/calcCostos';
 import { useIsMobile } from '../hooks/useMediaQuery';
 import type { Supermercado, CadenaSupermarket } from '../types';
 
@@ -67,8 +64,6 @@ const cadenaOptions = [
 export const Supermercados: React.FC = () => {
   const isMobile = useIsMobile();
   const { supermercado, addSupermercado, updateSupermercado, deleteSupermercado } = useSupermercadosStore();
-  const { precios } = usePreciosStore();
-  const { productos } = useProductosStore();
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -84,19 +79,6 @@ export const Supermercados: React.FC = () => {
   const selectedSupermercado = supermercado.find((s) => s.id === selectedId);
   const isEditing = selectedId && selectedSupermercado;
 
-  useEffect(() => {
-    if (selectedSupermercado) {
-      setForm({
-        nombre: selectedSupermercado.nombre,
-        cadena: selectedSupermercado.cadena,
-        direccion: selectedSupermercado.direccion,
-        notas: selectedSupermercado.notas ?? '',
-        lat: selectedSupermercado.lat,
-        lng: selectedSupermercado.lng,
-      });
-    }
-  }, [selectedId, selectedSupermercado]);
-
   const openNew = (lat?: number, lng?: number) => {
     setSelectedId(null);
     setForm({
@@ -111,6 +93,14 @@ export const Supermercados: React.FC = () => {
 
   const openEdit = (s: Supermercado) => {
     setSelectedId(s.id);
+    setForm({
+      nombre: s.nombre,
+      cadena: s.cadena,
+      direccion: s.direccion,
+      notas: s.notas ?? '',
+      lat: s.lat,
+      lng: s.lng,
+    });
   };
 
   const handleSubmit = () => {
@@ -142,23 +132,9 @@ export const Supermercados: React.FC = () => {
   };
 
   // Get product count per supermarket
+  const { precios } = usePreciosStore();
   const precioCount = (supId: string) =>
     new Set(precios.filter((p) => p.supermercadoId === supId).map((p) => p.productoId)).size;
-
-  const topCheapest = (supId: string) => {
-    const grouped: Record<string, number[]> = {};
-    precios.filter((p) => p.supermercadoId === supId).forEach((p) => {
-      if (!grouped[p.productoId]) grouped[p.productoId] = [];
-      grouped[p.productoId].push(p.precio);
-    });
-    return Object.entries(grouped)
-      .map(([pid, prices]) => ({
-        nombre: productos.find((p) => p.id === pid)?.nombre ?? pid,
-        precio: Math.min(...prices),
-      }))
-      .sort((a, b) => a.precio - b.precio)
-      .slice(0, 3);
-  };
 
   const leftPanel = (
     <div className="flex flex-col gap-4 p-4 h-full overflow-hidden">

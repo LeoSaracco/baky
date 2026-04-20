@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Pencil, Trash2, Box, Search, X } from 'lucide-react';
+import { Plus, Box, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { usePackagingStore } from '../store/usePackagingStore';
@@ -149,7 +149,7 @@ export const Packaging: React.FC = () => {
         </div>
       </div>
       <div className="flex-1 overflow-y-auto p-4">
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
           <Input
             label="Nombre"
             {...register('nombre', { required: 'Nombre requerido' })}
