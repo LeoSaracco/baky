@@ -200,7 +200,7 @@ export const ListaCompras: React.FC = () => {
       {/* Step 1: Shopping list */}
       {step === 1 && (
         <div className="space-y-4">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between flex-wrap gap-3">
             <div>
               <h2 className="text-base font-semibold text-[var(--text-primary)]">
                 {listaItems.length} ingrediente{listaItems.length !== 1 ? 's' : ''} a comprar
@@ -210,11 +210,9 @@ export const ListaCompras: React.FC = () => {
                 <span className="mono text-[var(--pink-400)] font-semibold">{formatARS(totalEstimado)}</span>
               </p>
             </div>
-            <div className="flex gap-2">
-              <Button variant="secondary" icon={<Share2 size={14} />} size="sm" onClick={handleWhatsApp}>
-                WhatsApp
-              </Button>
-            </div>
+            <Button variant="secondary" icon={<Share2 size={14} />} size="sm" onClick={handleWhatsApp}>
+              WhatsApp
+            </Button>
           </div>
 
           <div className="table-container">
@@ -235,8 +233,8 @@ export const ListaCompras: React.FC = () => {
                   const prod = productoMap.get(item.productoId);
                   const isChecked = checkedItems.has(item.productoId);
                   return (
-                    <tr key={item.productoId} style={isChecked ? { opacity: 0.5 } : {}}>
-                      <td>
+                    <tr key={item.productoId}>
+                      <td className="w-8">
                         <input
                           type="checkbox"
                           checked={isChecked}
@@ -244,7 +242,7 @@ export const ListaCompras: React.FC = () => {
                           className="w-4 h-4 accent-pink-500"
                         />
                       </td>
-                      <td className={`font-medium ${isChecked ? 'line-through' : ''}`}>
+                      <td className={`font-medium ${isChecked ? 'line-through text-[var(--text-muted)]' : ''}`}>
                         {prod?.nombre ?? item.productoId}
                       </td>
                       <td className="mono text-[var(--text-muted)]">{item.necesario}</td>

@@ -3,6 +3,7 @@ import { Plus, Box, X } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import toast from 'react-hot-toast';
 import { usePackagingStore } from '../store/usePackagingStore';
+import { useIsMobile } from '../hooks/useMediaQuery';
 import { Button } from '../components/ui/Button';
 import { Badge } from '../components/ui/Badge';
 import { Input, Select, Textarea } from '../components/ui/Input';
@@ -39,6 +40,8 @@ const tipoColor: Record<TipoPackaging, 'pink' | 'lavender' | 'mint' | 'yellow' |
 export const Packaging: React.FC = () => {
   const { items, addItem, updateItem, deleteItem } = usePackagingStore();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
+  const isMobile = useIsMobile();
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
 
@@ -56,13 +59,18 @@ export const Packaging: React.FC = () => {
   }, [selectedId, selectedItem, reset]);
 
   const handleNew = () => {
-    const nuevo = addItem({
-      nombre: 'Nuevo Ítem',
-      tipo: 'caja',
-      costoUnitario: 0,
-      notas: '',
-    });
-    setSelectedId(nuevo.id);
+    if (isMobile) {
+      setIsCreating(true);
+      reset({ nombre: 'Nuevo Ítem', tipo: 'caja', costoUnitario: 0, notas: '' });
+    } else {
+      const nuevo = addItem({
+        nombre: 'Nuevo Ítem',
+        tipo: 'caja',
+        costoUnitario: 0,
+        notas: '',
+      });
+      setSelectedId(nuevo.id);
+    }
   };
 
   const openEdit = (item: PackagingItem) => {
@@ -70,7 +78,12 @@ export const Packaging: React.FC = () => {
   };
 
   const onSubmit = (data: FormData) => {
-    if (selectedId) {
+    if (isCreating && isMobile) {
+      addItem(data);
+      toast.success('Ítem agregado');
+      setIsCreating(false);
+      reset();
+    } else if (selectedId) {
       updateItem(selectedId, data);
       toast.success('Ítem actualizado');
     }
@@ -84,10 +97,13 @@ export const Packaging: React.FC = () => {
     }
   };
 
-  const closeForm = () => {
+const closeForm = () => {
     setSelectedId(null);
+    setIsCreating(false);
   };
 
+  const showForm = isMobile ? (isCreating || selectedId) : selectedId;
+  
   const leftPanel = (
     <div className="flex flex-col gap-4 p-4 h-full overflow-hidden">
       <Button icon={<Plus size={18} />} onClick={handleNew} className="rounded-xl">
@@ -133,16 +149,18 @@ export const Packaging: React.FC = () => {
     </div>
   );
 
-  const rightPanel = selectedId ? (
+  const rightPanel = showForm ? (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)]">
         <h2 className="font-semibold text-[var(--text-primary)]">
-          {selectedItem ? 'Editar' : 'Nuevo'} Ítem
+          {isCreating && isMobile ? 'Nuevo' : selectedItem ? 'Editar' : 'Nuevo'} Ítem
         </h2>
         <div className="flex gap-2">
-          <Button variant="ghost" size="sm" onClick={() => handleDelete(selectedId, selectedItem?.nombre || '')}>
-            Eliminar
-          </Button>
+          {selectedId && (
+            <Button variant="ghost" size="sm" onClick={() => handleDelete(selectedId, selectedItem?.nombre || '')}>
+              Eliminar
+            </Button>
+          )}
           <Button variant="ghost" size="sm" icon={<X size={18} />} onClick={closeForm}>
             Cerrar
           </Button>

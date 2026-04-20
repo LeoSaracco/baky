@@ -8,6 +8,7 @@ import { Badge } from '../components/ui/Badge';
 import { Input, Select } from '../components/ui/Input';
 import { EmptyState } from '../components/ui/EmptyState';
 import { TwoPanelLayout } from '../components/ui/TwoPanelLayout';
+import { useIsMobile } from '../hooks/useMediaQuery';
 import { formatARS } from '../utils/calcCostos';
 import type { Producto, CategoriaIngrediente, Unidad } from '../types';
 
@@ -59,8 +60,11 @@ const categoriaColor: Record<CategoriaIngrediente, 'pink' | 'lavender' | 'mint' 
 export const Productos: React.FC = () => {
   const { productos, addProducto, updateProducto, deleteProducto } = useProductosStore();
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
   const [search, setSearch] = useState('');
   const [filterCat, setFilterCat] = useState('');
+
+  const isMobile = useIsMobile();
 
   const { register, handleSubmit, reset, formState: { errors } } = useForm<FormData>();
 
@@ -87,14 +91,19 @@ export const Productos: React.FC = () => {
   }, [selectedId, selectedProducto, reset]);
 
   const handleNew = () => {
-    const nuevo = addProducto({
-      nombre: 'Nuevo Ingrediente',
-      categoria: 'harinas',
-      unidad: 'g',
-      precioActual: 0,
-      proveedor: '',
-    });
-    setSelectedId(nuevo.id);
+    if (isMobile) {
+      setIsCreating(true);
+      reset({ nombre: 'Nuevo Ingrediente', categoria: 'harinas', unidad: 'g', precioActual: 0, proveedor: '' });
+    } else {
+      const nuevo = addProducto({
+        nombre: 'Nuevo Ingrediente',
+        categoria: 'harinas',
+        unidad: 'g',
+        precioActual: 0,
+        proveedor: '',
+      });
+      setSelectedId(nuevo.id);
+    }
   };
 
   const openEdit = (p: Producto) => {
@@ -102,7 +111,12 @@ export const Productos: React.FC = () => {
   };
 
   const onSubmit = (data: FormData) => {
-    if (selectedId) {
+    if (isCreating && isMobile) {
+      addProducto(data);
+      toast.success('Ingrediente agregado');
+      setIsCreating(false);
+      reset();
+    } else if (selectedId) {
       updateProducto(selectedId, data);
       toast.success('Ingrediente actualizado');
     }
@@ -118,6 +132,7 @@ export const Productos: React.FC = () => {
 
   const closeForm = () => {
     setSelectedId(null);
+    setIsCreating(false);
   };
 
   const leftPanel = (
@@ -203,16 +218,20 @@ export const Productos: React.FC = () => {
     </div>
   );
 
-  const rightPanel = selectedId ? (
+  const showForm = isMobile ? (isCreating || selectedId) : selectedId;
+
+  const rightPanel = showForm ? (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)]">
         <h2 className="font-semibold text-[var(--text-primary)]">
-          {selectedProducto ? 'Editar' : 'Nuevo'} Ingrediente
+          {isCreating && isMobile ? 'Nuevo' : selectedProducto ? 'Editar' : 'Nuevo'} Ingrediente
         </h2>
         <div className="flex gap-2">
-          <Button variant="ghost" size="sm" onClick={() => handleDelete(selectedId, selectedProducto?.nombre || '')}>
-            Eliminar
-          </Button>
+          {selectedId && (
+            <Button variant="ghost" size="sm" onClick={() => handleDelete(selectedId, selectedProducto?.nombre || '')}>
+              Eliminar
+            </Button>
+          )}
           <Button variant="ghost" size="sm" icon={<X size={18} />} onClick={closeForm}>
             Cerrar
           </Button>

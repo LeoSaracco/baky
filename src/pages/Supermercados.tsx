@@ -66,6 +66,7 @@ export const Supermercados: React.FC = () => {
   const { supermercado, addSupermercado, updateSupermercado, deleteSupermercado } = useSupermercadosStore();
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isCreating, setIsCreating] = useState(false);
 
   const [form, setForm] = useState({
     nombre: '',
@@ -80,6 +81,9 @@ export const Supermercados: React.FC = () => {
   const isEditing = selectedId && selectedSupermercado;
 
   const openNew = (lat?: number, lng?: number) => {
+    if (isMobile) {
+      setIsCreating(true);
+    }
     setSelectedId(null);
     setForm({
       nombre: '',
@@ -93,6 +97,7 @@ export const Supermercados: React.FC = () => {
 
   const openEdit = (s: Supermercado) => {
     setSelectedId(s.id);
+    if (isMobile) setIsCreating(false);
     setForm({
       nombre: s.nombre,
       cadena: s.cadena,
@@ -105,7 +110,12 @@ export const Supermercados: React.FC = () => {
 
   const handleSubmit = () => {
     if (!form.nombre.trim()) { toast.error('El nombre es requerido'); return; }
-    if (isEditing) {
+    if (isCreating && isMobile) {
+      const nuevo = addSupermercado({ ...form, lastVisit: new Date().toISOString() });
+      setSelectedId(nuevo.id);
+      setIsCreating(false);
+      toast.success('Supermercado agregado');
+    } else if (isEditing) {
       updateSupermercado(selectedId, { ...form, lastVisit: new Date().toISOString() });
       toast.success('Supermercado actualizado');
     } else {
@@ -129,7 +139,10 @@ export const Supermercados: React.FC = () => {
 
   const closeForm = () => {
     setSelectedId(null);
+    setIsCreating(false);
   };
+
+  const showForm = isMobile ? (isCreating || isEditing) : isEditing;
 
   // Get product count per supermarket
   const { precios } = usePreciosStore();
@@ -221,7 +234,7 @@ export const Supermercados: React.FC = () => {
     </div>
   );
 
-  const rightPanel = !isMobile && (isEditing || !selectedId) ? (
+  const rightPanel = showForm ? (
     <div className="flex flex-col h-full overflow-hidden">
       {isEditing ? (
         <>
