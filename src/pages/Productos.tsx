@@ -91,19 +91,14 @@ export const Productos: React.FC = () => {
   }, [selectedId, selectedProducto, reset]);
 
   const handleNew = () => {
-    if (isMobile) {
-      setIsCreating(true);
-      reset({ nombre: 'Nuevo Ingrediente', categoria: 'harinas', unidad: 'g', precioActual: 0, proveedor: '' });
-    } else {
-      const nuevo = addProducto({
-        nombre: 'Nuevo Ingrediente',
-        categoria: 'harinas',
-        unidad: 'g',
-        precioActual: 0,
-        proveedor: '',
-      });
-      setSelectedId(nuevo.id);
-    }
+    const nuevo = addProducto({
+      nombre: 'Nuevo Ingrediente',
+      categoria: 'harinas',
+      unidad: 'g',
+      precioActual: 0,
+      proveedor: '',
+    });
+    setSelectedId(nuevo.id);
   };
 
   const openEdit = (p: Producto) => {
@@ -111,12 +106,7 @@ export const Productos: React.FC = () => {
   };
 
   const onSubmit = (data: FormData) => {
-    if (isCreating && isMobile) {
-      addProducto(data);
-      toast.success('Ingrediente agregado');
-      setIsCreating(false);
-      reset();
-    } else if (selectedId) {
+    if (selectedId) {
       updateProducto(selectedId, data);
       toast.success('Ingrediente actualizado');
     }

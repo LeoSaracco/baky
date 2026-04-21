@@ -81,11 +81,7 @@ export const Supermercados: React.FC = () => {
   const isEditing = selectedId && selectedSupermercado;
 
   const openNew = (lat?: number, lng?: number) => {
-    if (isMobile) {
-      setIsCreating(true);
-    }
-    setSelectedId(null);
-    setForm({
+    const nuevo = addSupermercado({
       nombre: '',
       cadena: 'Carrefour',
       direccion: '',
@@ -93,6 +89,7 @@ export const Supermercados: React.FC = () => {
       lat: lat ?? -34.6037,
       lng: lng ?? -58.3816,
     });
+    setSelectedId(nuevo.id);
   };
 
   const openEdit = (s: Supermercado) => {
@@ -110,18 +107,9 @@ export const Supermercados: React.FC = () => {
 
   const handleSubmit = () => {
     if (!form.nombre.trim()) { toast.error('El nombre es requerido'); return; }
-    if (isCreating && isMobile) {
-      const nuevo = addSupermercado({ ...form, lastVisit: new Date().toISOString() });
-      setSelectedId(nuevo.id);
-      setIsCreating(false);
-      toast.success('Supermercado agregado');
-    } else if (isEditing) {
+    if (isEditing) {
       updateSupermercado(selectedId, { ...form, lastVisit: new Date().toISOString() });
       toast.success('Supermercado actualizado');
-    } else {
-      const nuevo = addSupermercado({ ...form, lastVisit: new Date().toISOString() });
-      setSelectedId(nuevo.id);
-      toast.success('Supermercado agregado');
     }
   };
 

@@ -59,18 +59,13 @@ export const Packaging: React.FC = () => {
   }, [selectedId, selectedItem, reset]);
 
   const handleNew = () => {
-    if (isMobile) {
-      setIsCreating(true);
-      reset({ nombre: 'Nuevo Ítem', tipo: 'caja', costoUnitario: 0, notas: '' });
-    } else {
-      const nuevo = addItem({
-        nombre: 'Nuevo Ítem',
-        tipo: 'caja',
-        costoUnitario: 0,
-        notas: '',
-      });
-      setSelectedId(nuevo.id);
-    }
+    const nuevo = addItem({
+      nombre: 'Nuevo Ítem',
+      tipo: 'caja',
+      costoUnitario: 0,
+      notas: '',
+    });
+    setSelectedId(nuevo.id);
   };
 
   const openEdit = (item: PackagingItem) => {
@@ -78,12 +73,7 @@ export const Packaging: React.FC = () => {
   };
 
   const onSubmit = (data: FormData) => {
-    if (isCreating && isMobile) {
-      addItem(data);
-      toast.success('Ítem agregado');
-      setIsCreating(false);
-      reset();
-    } else if (selectedId) {
+    if (selectedId) {
       updateItem(selectedId, data);
       toast.success('Ítem actualizado');
     }
