@@ -1,5 +1,4 @@
 import React from 'react';
-import { useIsMobile } from '../../hooks/useMediaQuery';
 
 interface TwoPanelLayoutProps {
   leftPanel: React.ReactNode;
@@ -12,23 +11,15 @@ export const TwoPanelLayout: React.FC<TwoPanelLayoutProps> = ({
   rightPanel,
   leftPanelWidth = 'w-full md:w-[380px]',
 }) => {
-  const isMobile = useIsMobile();
   const hasRightContent = React.Children.count(rightPanel) > 0;
 
-  if (isMobile && !hasRightContent) {
+  if (hasRightContent) {
     return (
-      <div className="flex flex-col" style={{ height: 'calc(100vh - var(--topbar-height) - var(--bottomnav-height))' }}>
-        <div className="flex-1 overflow-y-auto">
+      <div className="flex flex-col md:flex-row gap-0 min-h-0 h-full">
+        <div className={`${leftPanelWidth} flex-shrink-0 overflow-hidden flex flex-col border-r border-[var(--border-subtle)]`}>
           {leftPanel}
         </div>
-      </div>
-    );
-  }
-
-  if (isMobile && hasRightContent) {
-    return (
-      <div className="flex flex-col" style={{ height: 'calc(100vh - var(--topbar-height) - var(--bottomnav-height))' }}>
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 overflow-hidden flex flex-col min-h-0">
           {rightPanel}
         </div>
       </div>
@@ -36,15 +27,10 @@ export const TwoPanelLayout: React.FC<TwoPanelLayoutProps> = ({
   }
 
   return (
-    <div className="flex flex-col md:flex-row gap-0 min-h-0 h-full">
-      <div className={`${leftPanelWidth} flex-shrink-0 overflow-hidden flex flex-col border-r border-[var(--border-subtle)]`}>
+    <div className="flex flex-col min-h-0 h-full">
+      <div className="flex-1 overflow-y-auto">
         {leftPanel}
       </div>
-      {hasRightContent && (
-        <div className="flex-1 overflow-hidden flex flex-col min-h-0">
-          {rightPanel}
-        </div>
-      )}
     </div>
   );
 };
