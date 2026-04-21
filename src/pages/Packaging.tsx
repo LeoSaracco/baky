@@ -12,6 +12,13 @@ import { TwoPanelLayout } from '../components/ui/TwoPanelLayout';
 import { formatARS } from '../utils/calcCostos';
 import type { PackagingItem, TipoPackaging } from '../types';
 
+const emptyForm: FormData = {
+  nombre: '',
+  tipo: 'caja',
+  costoUnitario: 0,
+  notas: '',
+};
+
 interface FormData {
   nombre: string;
   tipo: 'caja' | 'bolsa' | 'sticker' | 'cinta' | 'bandeja' | 'otro';
@@ -59,21 +66,22 @@ export const Packaging: React.FC = () => {
   }, [selectedId, selectedItem, reset]);
 
   const handleNew = () => {
-    const nuevo = addItem({
-      nombre: 'Nuevo Ítem',
-      tipo: 'caja',
-      costoUnitario: 0,
-      notas: '',
-    });
-    setSelectedId(nuevo.id);
+    setSelectedId(null);
+    setIsCreating(true);
+    reset(emptyForm);
   };
 
   const openEdit = (item: PackagingItem) => {
+    setIsCreating(false);
     setSelectedId(item.id);
   };
 
   const onSubmit = (data: FormData) => {
-    if (selectedId) {
+    if (isCreating) {
+      addItem(data);
+      toast.success('Ítem creado');
+      setIsCreating(false);
+    } else if (selectedId) {
       updateItem(selectedId, data);
       toast.success('Ítem actualizado');
     }
@@ -92,8 +100,8 @@ const closeForm = () => {
     setIsCreating(false);
   };
 
-  const showForm = isMobile ? (isCreating || selectedId) : selectedId;
-  
+  const showForm = isMobile ? (isCreating || selectedId) : (isCreating || selectedId);
+
   const leftPanel = (
     <div className="flex flex-col gap-4 p-4 h-full overflow-hidden">
       <Button icon={<Plus size={18} />} onClick={handleNew} className="rounded-xl">
@@ -142,18 +150,18 @@ const closeForm = () => {
   const rightPanel = showForm ? (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)]">
-        <h2 className="font-semibold text-[var(--text-primary)]">
-          {isCreating && isMobile ? 'Nuevo' : selectedItem ? 'Editar' : 'Nuevo'} Ítem
-        </h2>
+<h2 className="font-semibold text-[var(--text-primary)]">
+              {isCreating ? 'Nuevo' : selectedItem ? 'Editar' : 'Nuevo'} Ítem
+            </h2>
         <div className="flex gap-2">
           {selectedId && (
             <Button variant="ghost" size="sm" onClick={() => handleDelete(selectedId, selectedItem?.nombre || '')}>
               Eliminar
             </Button>
           )}
-          <Button variant="ghost" size="sm" icon={<X size={18} />} onClick={closeForm}>
-            Cerrar
-          </Button>
+<Button variant="ghost" size="sm" icon={<X size={18} />} onClick={closeForm}>
+              {isCreating ? 'Cancelar' : 'Cerrar'}
+            </Button>
         </div>
       </div>
       <div className="flex-1 overflow-y-auto p-4">
@@ -177,9 +185,9 @@ const closeForm = () => {
             />
           </div>
           <Textarea label="Notas (opcional)" {...register('notas')} placeholder="Dimensiones, colores, proveedor..." />
-          <Button type="submit" className="w-full">
-            Guardar cambios
-          </Button>
+<Button type="submit" className="w-full">
+              {isCreating ? 'Crear' : 'Guardar cambios'}
+            </Button>
         </form>
       </div>
     </div>

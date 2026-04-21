@@ -30,6 +30,12 @@ export const Presupuestos: React.FC = () => {
   const [filterEstado, setFilterEstado] = useState<EstadoPresupuesto | ''>('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [showDetail, setShowDetail] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
+  const [newForm, setNewForm] = useState({
+    cliente: '',
+    fechaVencimiento: addDays(new Date(), 30).toISOString().split('T')[0],
+    notas: '',
+  });
 
   const filtered = presupuestos.filter((p) =>
     filterEstado ? p.estado === filterEstado : true
@@ -38,22 +44,36 @@ export const Presupuestos: React.FC = () => {
   const selected = presupuestos.find((p) => p.id === selectedId) ?? null;
 
   const openPresupuesto = (p: Presupuesto) => {
+    setIsCreating(false);
     setSelectedId(p.id);
     if (isMobile) setShowDetail(true);
   };
 
   const handleNew = () => {
+    setSelectedId(null);
+    setIsCreating(true);
+    setNewForm({
+      cliente: '',
+      fechaVencimiento: addDays(new Date(), 30).toISOString().split('T')[0],
+      notas: '',
+    });
+  };
+
+  const handleCreate = () => {
+    if (!newForm.cliente.trim()) { toast.error('El cliente es requerido'); return; }
     const nuevo = addPresupuesto({
-      cliente: 'Nuevo cliente',
+      cliente: newForm.cliente,
       fechaEmision: new Date().toISOString(),
-      fechaVencimiento: addDays(new Date(), 30).toISOString(),
+      fechaVencimiento: new Date(newForm.fechaVencimiento).toISOString(),
       items: [],
       descuento: 0,
       impuestos: 0,
       estado: 'borrador',
+      notas: newForm.notas,
     });
     setSelectedId(nuevo.id);
-    if (isMobile) setShowDetail(true);
+    setIsCreating(false);
+    toast.success('Presupuesto creado');
   };
 
   const handleDuplicate = (id: string) => {
@@ -78,9 +98,53 @@ export const Presupuestos: React.FC = () => {
   const closeDetail = () => {
     setSelectedId(null);
     setShowDetail(false);
+    setIsCreating(false);
   };
 
-  if (isMobile && showDetail) {
+  const showForm = isMobile ? (isCreating || showDetail) : (isCreating || selectedId);
+
+  if (isMobile && showForm) {
+    if (isCreating) {
+      return (
+        <div className="flex flex-col h-full">
+          <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)]">
+            <h2 className="font-semibold text-[var(--text-primary)]">Nuevo Presupuesto</h2>
+            <Button variant="ghost" size="sm" icon={<X size={18} />} onClick={closeDetail}>Cancelar</Button>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div>
+              <label className="text-sm text-[var(--text-muted)] mb-1 block">Cliente</label>
+              <input
+                className="input-field"
+                value={newForm.cliente}
+                onChange={(e) => setNewForm({ ...newForm, cliente: e.target.value })}
+                placeholder="Nombre del cliente"
+              />
+            </div>
+            <div>
+              <label className="text-sm text-[var(--text-muted)] mb-1 block">Fecha vencimiento</label>
+              <input
+                type="date"
+                className="input-field"
+                value={newForm.fechaVencimiento}
+                onChange={(e) => setNewForm({ ...newForm, fechaVencimiento: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="text-sm text-[var(--text-muted)] mb-1 block">Notas</label>
+              <textarea
+                className="input-field resize-none"
+                rows={2}
+                value={newForm.notas}
+                onChange={(e) => setNewForm({ ...newForm, notas: e.target.value })}
+                placeholder="Detalles adicionales..."
+              />
+            </div>
+            <Button onClick={handleCreate} className="w-full">Crear</Button>
+          </div>
+        </div>
+      );
+    }
     return (
       <div className="flex flex-col h-full">
         <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)]">
@@ -176,7 +240,45 @@ export const Presupuestos: React.FC = () => {
 
   const rightPanel = !isMobile && (
     <div className="flex flex-col h-full overflow-hidden">
-      {selected ? (
+      {isCreating ? (
+        <div className="flex flex-col h-full">
+          <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)]">
+            <h2 className="font-semibold text-[var(--text-primary)]">Nuevo Presupuesto</h2>
+            <Button variant="ghost" size="sm" icon={<X size={18} />} onClick={closeDetail}>Cancelar</Button>
+          </div>
+          <div className="flex-1 overflow-y-auto p-4 space-y-4">
+            <div>
+              <label className="text-sm text-[var(--text-muted)] mb-1 block">Cliente</label>
+              <input
+                className="input-field"
+                value={newForm.cliente}
+                onChange={(e) => setNewForm({ ...newForm, cliente: e.target.value })}
+                placeholder="Nombre del cliente"
+              />
+            </div>
+            <div>
+              <label className="text-sm text-[var(--text-muted)] mb-1 block">Fecha vencimiento</label>
+              <input
+                type="date"
+                className="input-field"
+                value={newForm.fechaVencimiento}
+                onChange={(e) => setNewForm({ ...newForm, fechaVencimiento: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="text-sm text-[var(--text-muted)] mb-1 block">Notas</label>
+              <textarea
+                className="input-field resize-none"
+                rows={2}
+                value={newForm.notas}
+                onChange={(e) => setNewForm({ ...newForm, notas: e.target.value })}
+                placeholder="Detalles adicionales..."
+              />
+            </div>
+            <Button onClick={handleCreate} className="w-full">Crear</Button>
+          </div>
+        </div>
+      ) : selected ? (
         <>
           <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)]">
             <h2 className="font-semibold text-[var(--text-primary)]">

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plus, Trash2, MapPin, X } from 'lucide-react';
+import { Plus, Trash2, MapPin, X, Navigation } from 'lucide-react';
 import { MapContainer, TileLayer, Marker, Popup, useMapEvents } from 'react-leaflet';
 import L from 'leaflet';
 import toast from 'react-hot-toast';
@@ -68,33 +68,35 @@ export const Supermercados: React.FC = () => {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isCreating, setIsCreating] = useState(false);
 
-  const [form, setForm] = useState({
+  const emptyForm = {
     nombre: '',
     cadena: 'Carrefour' as CadenaSupermarket,
     direccion: '',
     notas: '',
     lat: -34.6037,
     lng: -58.3816,
-  });
+  };
+
+  const [form, setForm] = useState(emptyForm);
+  const [tempLatLng, setTempLatLng] = useState<{lat: number, lng: number} | null>(null);
 
   const selectedSupermercado = supermercado.find((s) => s.id === selectedId);
   const isEditing = selectedId && selectedSupermercado;
 
   const openNew = (lat?: number, lng?: number) => {
-    const nuevo = addSupermercado({
-      nombre: '',
-      cadena: 'Carrefour',
-      direccion: '',
-      notas: '',
+    setSelectedId(null);
+    setIsCreating(true);
+    setForm({
+      ...emptyForm,
       lat: lat ?? -34.6037,
       lng: lng ?? -58.3816,
     });
-    setSelectedId(nuevo.id);
+    setTempLatLng(lat && lng ? {lat, lng} : null);
   };
 
   const openEdit = (s: Supermercado) => {
+    setIsCreating(false);
     setSelectedId(s.id);
-    if (isMobile) setIsCreating(false);
     setForm({
       nombre: s.nombre,
       cadena: s.cadena,
@@ -103,11 +105,17 @@ export const Supermercados: React.FC = () => {
       lat: s.lat,
       lng: s.lng,
     });
+    setTempLatLng(null);
   };
 
   const handleSubmit = () => {
     if (!form.nombre.trim()) { toast.error('El nombre es requerido'); return; }
-    if (isEditing) {
+    if (isCreating) {
+      addSupermercado({ ...form, lastVisit: new Date().toISOString() });
+      toast.success('Supermercado creado');
+      setIsCreating(false);
+      setTempLatLng(null);
+    } else if (isEditing) {
       updateSupermercado(selectedId, { ...form, lastVisit: new Date().toISOString() });
       toast.success('Supermercado actualizado');
     }
@@ -128,9 +136,10 @@ export const Supermercados: React.FC = () => {
   const closeForm = () => {
     setSelectedId(null);
     setIsCreating(false);
+    setTempLatLng(null);
   };
 
-  const showForm = isMobile ? (isCreating || isEditing) : isEditing;
+  const showForm = isMobile ? (isCreating || selectedId) : (isCreating || selectedId);
 
   // Get product count per supermarket
   const { precios } = usePreciosStore();
@@ -224,10 +233,12 @@ export const Supermercados: React.FC = () => {
 
   const rightPanel = showForm ? (
     <div className="flex flex-col h-full overflow-hidden">
-      {isEditing ? (
+      {isEditing || isCreating ? (
         <>
           <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)]">
-            <h2 className="font-semibold text-[var(--text-primary)]">Editar Supermercado</h2>
+            <h2 className="font-semibold text-[var(--text-primary)]">
+              {isEditing ? 'Editar' : 'Nuevo'} Supermercado
+            </h2>
             <Button variant="ghost" size="sm" icon={<X size={18} />} onClick={closeForm}>Cerrar</Button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
@@ -255,11 +266,37 @@ export const Supermercados: React.FC = () => {
                 <input type="number" step="0.0001" className="input-field" value={form.lng} onChange={(e) => setForm({ ...form, lng: Number(e.target.value) })} />
               </div>
             </div>
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={<Navigation size={14} />}
+              onClick={() => {
+                if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                      setForm({
+                        ...form,
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                      });
+                      toast.success('Ubicación actual detectada');
+                    },
+                    () => { toast.error('No se pudo obtener ubicación'); }
+                  );
+                } else {
+                  toast.error('Geolocalización no soportada');
+                }
+              }}
+            >
+              Usar mi ubicación actual
+            </Button>
             <div>
               <label className="text-sm text-[var(--text-muted)] mb-1 block">Notas (opcional)</label>
               <textarea className="input-field resize-none" rows={2} value={form.notas} onChange={(e) => setForm({ ...form, notas: e.target.value })} placeholder="Horarios, descuentos..." />
             </div>
-            <Button onClick={handleSubmit} className="w-full">Guardar cambios</Button>
+            <Button onClick={handleSubmit} className="w-full">
+              {isCreating ? 'Crear' : 'Guardar cambios'}
+            </Button>
           </div>
         </>
       ) : (
@@ -304,7 +341,7 @@ export const Supermercados: React.FC = () => {
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)]">
             <h2 className="font-semibold text-[var(--text-primary)]">Nuevo Supermercado</h2>
-            <Button variant="ghost" size="sm" icon={<X size={18} />} onClick={closeForm}>Cerrar</Button>
+            <Button variant="ghost" size="sm" icon={<X size={18} />} onClick={closeForm}>Cancelar</Button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
             <div>
@@ -331,11 +368,35 @@ export const Supermercados: React.FC = () => {
                 <input type="number" step="0.0001" className="input-field" value={form.lng} onChange={(e) => setForm({ ...form, lng: Number(e.target.value) })} />
               </div>
             </div>
+            <Button
+              variant="secondary"
+              size="sm"
+              icon={<Navigation size={14} />}
+              onClick={() => {
+                if (navigator.geolocation) {
+                  navigator.geolocation.getCurrentPosition(
+                    (position) => {
+                      setForm({
+                        ...form,
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                      });
+                      toast.success('Ubicación actual detectada');
+                    },
+                    () => { toast.error('No se pudo obtener ubicación'); }
+                  );
+                } else {
+                  toast.error('Geolocalización no soportada');
+                }
+              }}
+            >
+              Usar mi ubicación actual
+            </Button>
             <div>
               <label className="text-sm text-[var(--text-muted)] mb-1 block">Notas (opcional)</label>
               <textarea className="input-field resize-none" rows={2} value={form.notas} onChange={(e) => setForm({ ...form, notas: e.target.value })} placeholder="Horarios, descuentos..." />
             </div>
-            <Button onClick={handleSubmit} className="w-full">Guardar cambios</Button>
+            <Button onClick={handleSubmit} className="w-full">Crear</Button>
           </div>
         </div>
       );

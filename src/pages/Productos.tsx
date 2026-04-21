@@ -12,6 +12,14 @@ import { useIsMobile } from '../hooks/useMediaQuery';
 import { formatARS } from '../utils/calcCostos';
 import type { Producto, CategoriaIngrediente, Unidad } from '../types';
 
+const emptyForm: FormData = {
+  nombre: '',
+  categoria: 'harinas',
+  unidad: 'g',
+  precioActual: 0,
+  proveedor: '',
+};
+
 interface FormData {
   nombre: string;
   categoria: CategoriaIngrediente;
@@ -91,22 +99,22 @@ export const Productos: React.FC = () => {
   }, [selectedId, selectedProducto, reset]);
 
   const handleNew = () => {
-    const nuevo = addProducto({
-      nombre: 'Nuevo Ingrediente',
-      categoria: 'harinas',
-      unidad: 'g',
-      precioActual: 0,
-      proveedor: '',
-    });
-    setSelectedId(nuevo.id);
+    setSelectedId(null);
+    setIsCreating(true);
+    reset(emptyForm);
   };
 
   const openEdit = (p: Producto) => {
+    setIsCreating(false);
     setSelectedId(p.id);
   };
 
   const onSubmit = (data: FormData) => {
-    if (selectedId) {
+    if (isCreating) {
+      addProducto(data);
+      toast.success('Ingrediente creado');
+      setIsCreating(false);
+    } else if (selectedId) {
       updateProducto(selectedId, data);
       toast.success('Ingrediente actualizado');
     }
@@ -208,22 +216,22 @@ export const Productos: React.FC = () => {
     </div>
   );
 
-  const showForm = isMobile ? (isCreating || selectedId) : selectedId;
+  const showForm = isMobile ? (isCreating || selectedId) : (isCreating || selectedId);
 
   const rightPanel = showForm ? (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)]">
         <h2 className="font-semibold text-[var(--text-primary)]">
-          {isCreating && isMobile ? 'Nuevo' : selectedProducto ? 'Editar' : 'Nuevo'} Ingrediente
+          {isCreating ? 'Nuevo' : selectedProducto ? 'Editar' : 'Nuevo'} Ingrediente
         </h2>
         <div className="flex gap-2">
-          {selectedId && (
-            <Button variant="ghost" size="sm" onClick={() => handleDelete(selectedId, selectedProducto?.nombre || '')}>
+          {selectedProducto && (
+            <Button variant="ghost" size="sm" onClick={() => handleDelete(selectedId!, selectedProducto.nombre)}>
               Eliminar
             </Button>
           )}
           <Button variant="ghost" size="sm" icon={<X size={18} />} onClick={closeForm}>
-            Cerrar
+            {isCreating ? 'Cancelar' : 'Cerrar'}
           </Button>
         </div>
       </div>
@@ -260,7 +268,7 @@ export const Productos: React.FC = () => {
           />
           <Input label="Proveedor (opcional)" {...register('proveedor')} placeholder="Ej: Molinos Río de la Plata" />
           <Button type="submit" className="w-full">
-            Guardar cambios
+            {isCreating ? 'Crear' : 'Guardar cambios'}
           </Button>
         </form>
       </div>
