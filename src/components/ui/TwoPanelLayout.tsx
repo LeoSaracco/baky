@@ -25,6 +25,16 @@ export const TwoPanelLayout: React.FC<TwoPanelLayoutProps> = ({
     );
   }
 
+  if (isMobile && hasRightContent) {
+    return (
+      <div className="flex flex-col" style={{ height: 'calc(100vh - var(--topbar-height) - var(--bottomnav-height))' }}>
+        <div className="flex-1 overflow-y-auto">
+          {rightPanel}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex flex-col md:flex-row gap-0 min-h-0 h-full">
       <div className={`${leftPanelWidth} flex-shrink-0 overflow-hidden flex flex-col border-r border-[var(--border-subtle)]`}>

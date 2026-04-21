@@ -311,11 +311,11 @@ export const Supermercados: React.FC = () => {
   ) : null;
 
   if (isMobile) {
-    if (isEditing) {
+    if (isCreating) {
       return (
         <div className="flex flex-col h-full">
           <div className="flex items-center justify-between p-4 border-b border-[var(--border-subtle)]">
-            <h2 className="font-semibold text-[var(--text-primary)]">Editar Supermercado</h2>
+            <h2 className="font-semibold text-[var(--text-primary)]">Nuevo Supermercado</h2>
             <Button variant="ghost" size="sm" icon={<X size={18} />} onClick={closeForm}>Cerrar</Button>
           </div>
           <div className="flex-1 overflow-y-auto p-4 space-y-4">
